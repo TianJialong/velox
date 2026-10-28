@@ -520,4 +520,23 @@ TEST_F(ToDateTest, TwoArgColumnFormatBadRowFails) {
   VELOX_ASSERT_THROW(evaluate("to_date(c0, c1)", data), "not supported");
 }
 
+TEST_F(ToDateTest, TwoArgAllNullInputWithBadConstantFormat) {
+  // All-NULL input: Flink's null propagation skips the method call, so the
+  // constant-format error must not surface — the rows come back NULL.
+  EXPECT_EQ(
+      std::nullopt,
+      toDateConstFormatOnce(std::nullopt, std::string("QQ")));
+  EXPECT_EQ(
+      std::nullopt,
+      toDateConstFormatOnce(std::nullopt, std::string("yyyy-MM-dd")));
+
+  // A non-NULL row alongside NULLs still fails the job, like Flink.
+  auto formatFlat = makeNullableFlatVector<std::string>({std::string("QQ")});
+  auto data = makeRowVector(std::vector<VectorPtr>{
+      makeNullableFlatVector<std::string>(
+          {std::nullopt, std::string("2026-09-11")}),
+      BaseVector::wrapInConstant(2, 0, formatFlat)});
+  VELOX_ASSERT_THROW(evaluate("to_date(c0, c1)", data), "not supported");
+}
+
 } // namespace facebook::velox::functions::flinksql::test
