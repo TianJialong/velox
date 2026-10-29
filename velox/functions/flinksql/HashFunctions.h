@@ -31,9 +31,10 @@ namespace facebook::velox::functions::flinksql {
 //
 // Implemented: the SHA-2 family — sha2(s, hashLength) plus the fixed-length
 // spellings sha224/sha256/sha384/sha512 that bind the hash length and route
-// to the same core. sha2 renders hashLength/4 lowercase hex chars; 0 selects
-// 256 and any other unsupported length fails the job, mirroring Flink's
-// rejection of unsupported algorithms.
+// to the same core. sha2 renders hashLength/4 lowercase hex chars; hashLength
+// 0 is rejected like any other unsupported length, mirroring Flink 1.19.2,
+// which rejects 0 outright — Hive's 0-means-256 convention is deliberately
+// not adopted so the offloaded and native execution paths stay consistent.
 //
 // Implementation pattern: one struct per function with
 // VELOX_DEFINE_FUNCTION_TYPES, registered with explicit signatures in
@@ -58,15 +59,14 @@ FOLLY_ALWAYS_INLINE void encodeDigestToHexString(
 
 // SHA-2 core shared by the whole family: computes the digest selected by
 // hashLength over the bytes of s and renders it as lowercase hex in result.
-// hashLength 0 selects 256; any other unsupported length fails the job,
-// mirroring Flink's rejection of unsupported algorithms. TResult is the
-// caller's out_type<Varchar> writer.
+// hashLength must be 224, 256, 384, or 512; 0 and any other unsupported
+// length fail the job, mirroring Flink 1.19.2's rejection of unsupported
+// algorithms (0 included). TResult is the caller's out_type<Varchar> writer.
 template <typename TResult>
 FOLLY_ALWAYS_INLINE void
 sha2Hex(TResult& result, std::string_view s, int64_t hashLength) {
-  const int64_t bitLength = (hashLength == 0) ? 256 : hashLength;
   const EVP_MD* hashAlgorithm;
-  switch (bitLength) {
+  switch (hashLength) {
     case 224:
       hashAlgorithm = EVP_sha224();
       break;
@@ -82,7 +82,7 @@ sha2Hex(TResult& result, std::string_view s, int64_t hashLength) {
     default:
       VELOX_USER_FAIL("Unsupported SHA-2 hash length: {}", hashLength);
   }
-  const int32_t digestLength = static_cast<int32_t>(bitLength >> 3);
+  const int32_t digestLength = static_cast<int32_t>(hashLength >> 3);
   result.resize(digestLength * 2);
   folly::ssl::OpenSSLHash::hash(
       folly::MutableByteRange((uint8_t*)result.data(), digestLength),
@@ -92,9 +92,9 @@ sha2Hex(TResult& result, std::string_view s, int64_t hashLength) {
 }
 
 // sha2(s, hashLength) -> varchar
-// SHA-2 family digest (224, 256, 384, or 512 bits; 0 selects 256) as a
-// lowercase hex string of hashLength/4 chars. NULL in -> NULL out; an
-// unsupported hashLength fails the job.
+// SHA-2 family digest (224, 256, 384, or 512 bits) as a lowercase hex
+// string of hashLength/4 chars. NULL in -> NULL out; hashLength 0, like any
+// other unsupported length, fails the job (Flink 1.19.2 rejects 0 too).
 template <typename TExec>
 struct Sha2Function {
   VELOX_DEFINE_FUNCTION_TYPES(TExec);

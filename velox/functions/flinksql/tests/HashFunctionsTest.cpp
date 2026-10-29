@@ -71,8 +71,8 @@ const std::string kLong{"0123456789abcdefghijklmnopqrstuvwxyz"};
 } // namespace
 
 // Expected values are pinned from Flink's actual behavior (lowercase hex,
-// UTF-8 bytes of the string); the 0-selects-256 rule and the rejection of
-// unsupported hash lengths follow the expression card.
+// UTF-8 bytes of the string); the rejection of unsupported hash lengths,
+// 0 included (Flink 1.19.2 rejects it too), follows the expression card.
 class FlinkHashTest : public functions::test::FunctionBaseTest {
  protected:
   static void SetUpTestCase() {
@@ -134,12 +134,12 @@ TEST_F(FlinkHashTest, Sha2SupportedLengths) {
   EXPECT_EQ(kSha512Long, sha2Once(kLong, 512));
 }
 
-// B. hashLength 0 selects 256 (card rule); BIGINT hashLength follows the
-// int32 path.
+// B. hashLength 0 is rejected like any other unsupported length — Flink
+// 1.19.2 rejects 0 outright, and the offloaded path must stay consistent with
+// native execution; BIGINT hashLength follows the int32 path.
 TEST_F(FlinkHashTest, Sha2ZeroAndBigIntLength) {
-  EXPECT_EQ(kSha256Empty, sha2Once(kEmpty, 0));
-  EXPECT_EQ(kSha256Test, sha2Once(kTest, 0));
-  EXPECT_EQ(kSha256Utf8, sha2Once(kUtf8, 0));
+  VELOX_ASSERT_THROW(sha2Once(kEmpty, 0), "Unsupported SHA-2 hash length: 0");
+  VELOX_ASSERT_THROW(sha2Once(kTest, 0), "Unsupported SHA-2 hash length: 0");
 
   EXPECT_EQ(kSha256Test, sha2BigIntOnce(kTest, 256));
   EXPECT_EQ(kSha512Test, sha2BigIntOnce(kTest, 512));
