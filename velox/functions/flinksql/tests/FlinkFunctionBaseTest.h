@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#include "velox/functions/prestosql/tests/utils/FunctionBaseTest.h"
 #include "velox/functions/flinksql/registration/RegistrationFunctions.h"
+#include "velox/functions/prestosql/tests/utils/FunctionBaseTest.h"
 
 namespace facebook::velox::functions::flinksql::test {
 

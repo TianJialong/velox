@@ -88,8 +88,7 @@ int32_t parseInt32OrFail(std::string_view s) {
   for (char c : s) {
     v = v * 10 + (c - '0');
     if (v > kLimit) {
-      VELOX_USER_FAIL(
-          "Invalid date string '{}': number out of int range", s);
+      VELOX_USER_FAIL("Invalid date string '{}': number out of int range", s);
     }
   }
   return static_cast<int32_t>(v);
@@ -264,11 +263,9 @@ std::optional<int32_t> toDateDays(
   // floorDiv: truncating division would lose a day for BCE dates with a
   // positive time-of-day part.
   const int64_t seconds = dateTimeResult.timestamp.getSeconds();
-  const int64_t days =
-      seconds >= 0
-          ? seconds / Timestamp::kSecondsInDay
-          : (seconds - (Timestamp::kSecondsInDay - 1)) /
-                Timestamp::kSecondsInDay;
+  const int64_t days = seconds >= 0
+      ? seconds / Timestamp::kSecondsInDay
+      : (seconds - (Timestamp::kSecondsInDay - 1)) / Timestamp::kSecondsInDay;
   if (days < INT32_MIN || days > INT32_MAX) {
     return std::nullopt; // out of the int32 DATE range -> NULL
   }

@@ -88,8 +88,7 @@ TEST_F(ToDateTest, OneArgInvalidToNull) {
 }
 
 TEST_F(ToDateTest, OneArgYearOutOfRangeFails) {
-  VELOX_ASSERT_THROW(
-      toDateOnce(std::string("9999999999")), "out of int range");
+  VELOX_ASSERT_THROW(toDateOnce(std::string("9999999999")), "out of int range");
   VELOX_ASSERT_THROW(
       toDateOnce(std::string("99999999999-01-01")), "out of int range");
 }
@@ -125,23 +124,17 @@ TEST_F(ToDateTest, TwoArgBasics) {
 
 TEST_F(ToDateTest, TwoArgOutOfRangeToNull) {
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-13-01"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-13-01"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-02-30"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-02-30"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-00-00"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-00-00"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-13-32"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-13-32"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-02-29"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-02-29"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2024-02-30"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2024-02-30"), std::string(kIso)));
   EXPECT_EQ(std::nullopt, toDateOnce(std::string("25"), std::string("HH")));
   EXPECT_EQ(std::nullopt, toDateOnce(std::string("24"), std::string("HH")));
   // Pure-time parse lands on the epoch (1970-01-01).
@@ -165,19 +158,16 @@ TEST_F(ToDateTest, TwoArgParseFailureToNull) {
       std::nullopt,
       toDateOnce(std::string("xyz2026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026/09/11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026/09/11"), std::string(kIso)));
   EXPECT_EQ(
       std::nullopt,
       toDateOnce(std::string("invalid value"), std::string(kIso)));
   EXPECT_EQ(std::nullopt, toDateOnce(std::string(""), std::string(kIso)));
   EXPECT_EQ(std::nullopt, toDateOnce(std::string("   "), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2,026-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2,026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("20.26-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("20.26-09-11"), std::string(kIso)));
   EXPECT_EQ(
       std::nullopt,
       toDateOnce(std::string("2026-XX-11"), std::string("yyyy-MMM-dd")));
@@ -218,20 +208,15 @@ TEST_F(ToDateTest, TwoArgHistoricalDates) {
 TEST_F(ToDateTest, TwoArgDayOfYearAndWeekdayFields) {
   EXPECT_EQ(20707, toDateOnce(std::string("2026-254"), std::string("yyyy-D")));
   EXPECT_EQ(
-      20544,
-      toDateOnce(std::string("2026-091"), std::string("yyyy-DDD")));
+      20544, toDateOnce(std::string("2026-091"), std::string("yyyy-DDD")));
   EXPECT_EQ(
-      -141415,
-      toDateOnce(std::string("1582-300"), std::string("yyyy-D")));
+      -141415, toDateOnce(std::string("1582-300"), std::string("yyyy-D")));
   EXPECT_EQ(
-      -141050,
-      toDateOnce(std::string("1583-300"), std::string("yyyy-D")));
+      -141050, toDateOnce(std::string("1583-300"), std::string("yyyy-D")));
   EXPECT_EQ(
-      -141780,
-      toDateOnce(std::string("1581-300"), std::string("yyyy-D")));
+      -141780, toDateOnce(std::string("1581-300"), std::string("yyyy-D")));
   EXPECT_EQ(
-      -141435,
-      toDateOnce(std::string("1582-280"), std::string("yyyy-D")));
+      -141435, toDateOnce(std::string("1582-280"), std::string("yyyy-D")));
   // E-only: no dow anchoring, year defaults to 2000 — all names agree.
   EXPECT_EQ(10957, toDateOnce(std::string("Fri"), std::string("E")));
   EXPECT_EQ(10957, toDateOnce(std::string("Sat"), std::string("E")));
@@ -240,11 +225,9 @@ TEST_F(ToDateTest, TwoArgDayOfYearAndWeekdayFields) {
   EXPECT_EQ(10957, toDateOnce(std::string("Thursday"), std::string("EEEE")));
   EXPECT_EQ(20454, toDateOnce(std::string("2026 Fri"), std::string("yyyy E")));
   EXPECT_EQ(
-      20454,
-      toDateOnce(std::string("2026 Thursday"), std::string("yyyy E")));
+      20454, toDateOnce(std::string("2026 Thursday"), std::string("yyyy E")));
   EXPECT_EQ(
-      20697,
-      toDateOnce(std::string("2026-09 Fri"), std::string("yyyy-MM E")));
+      20697, toDateOnce(std::string("2026-09 Fri"), std::string("yyyy-MM E")));
   EXPECT_EQ(
       20707,
       toDateOnce(std::string("2026-09-11 Mon"), std::string("yyyy-MM-dd E")));
@@ -253,8 +236,8 @@ TEST_F(ToDateTest, TwoArgDayOfYearAndWeekdayFields) {
   VELOX_ASSERT_THROW(
       toDateOnce(std::string("7"), std::string("u")), "not supported");
   VELOX_ASSERT_THROW(
-      toDateOnce(
-          std::string("2026 7"), std::string("yyyy u")), "not supported");
+      toDateOnce(std::string("2026 7"), std::string("yyyy u")),
+      "not supported");
   VELOX_ASSERT_THROW(
       toDateOnce(std::string("2026-09-11 5"), std::string("yyyy-MM-dd u")),
       "not supported");
@@ -262,38 +245,28 @@ TEST_F(ToDateTest, TwoArgDayOfYearAndWeekdayFields) {
 
 TEST_F(ToDateTest, TwoArgWhitespaceAndDigits) {
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string(" 2026-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string(" 2026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("  2026-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("  2026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("\t2026-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("\t2026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026- 9-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026- 9-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-09- 11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-09- 11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026 -09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026 -09-11"), std::string(kIso)));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("2026-09 -11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("2026-09 -11"), std::string(kIso)));
   EXPECT_EQ(
       std::nullopt,
       toDateOnce(std::string("2026- Sep-11"), std::string("yyyy-MMM-dd")));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("\n2026-09-11"), std::string(kIso)));
+      std::nullopt, toDateOnce(std::string("\n2026-09-11"), std::string(kIso)));
   EXPECT_EQ(
-      20707,
-      toDateOnce(std::string("20260911"), std::string("yyyyMMdd")));
+      20707, toDateOnce(std::string("20260911"), std::string("yyyyMMdd")));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("202691"), std::string("yyyyMMdd")));
+      std::nullopt, toDateOnce(std::string("202691"), std::string("yyyyMMdd")));
   EXPECT_EQ(20697, toDateOnce(std::string("2026091"), std::string("yyyyMMdd")));
   // 'yyyy' reads a 2-digit year literally: year 26, not 2026.
   EXPECT_EQ(-709778, toDateOnce(std::string("26-09-11"), std::string(kIso)));
@@ -314,8 +287,7 @@ TEST_F(ToDateTest, TwoArgWhitespaceAndDigits) {
   // A parsed time field lazily defaults the year to 2000.
   EXPECT_EQ(10967, toDateOnce(std::string("11 05"), std::string("dd HH")));
   EXPECT_EQ(
-      std::nullopt,
-      toDateOnce(std::string("11  05"), std::string("dd HH")));
+      std::nullopt, toDateOnce(std::string("11  05"), std::string("dd HH")));
 }
 
 TEST_F(ToDateTest, TwoArgDefaultedFields) {
@@ -360,8 +332,7 @@ TEST_F(ToDateTest, TwoArgSignsAndYearDomain) {
       toDateOnce(std::string("2026--911"), std::string("yyyyMMdd")));
   // The sign does not count against yyyy's digit cap: -2026-09-11 again.
   EXPECT_EQ(
-      -1459256,
-      toDateOnce(std::string("-20260911"), std::string("yyyyMMdd")));
+      -1459256, toDateOnce(std::string("-20260911"), std::string("yyyyMMdd")));
   EXPECT_EQ(std::nullopt, d("99999999999999999999-01-01"));
   EXPECT_EQ(std::nullopt, d("9223372036854775808-01-01"));
   EXPECT_EQ(std::nullopt, d("9999999999999999999-01-01"));
@@ -390,8 +361,7 @@ TEST_F(ToDateTest, TwoArgTextEraTimezone) {
   EXPECT_EQ(
       20707,
       toDateOnce(
-          std::string("2026-September-11"),
-          std::string("yyyy-MMMM-dd")));
+          std::string("2026-September-11"), std::string("yyyy-MMMM-dd")));
   EXPECT_EQ(
       20707,
       toDateOnce(std::string("2026-September-11"), std::string("yyyy-MMM-dd")));
@@ -412,8 +382,7 @@ TEST_F(ToDateTest, TwoArgTextEraTimezone) {
       std::nullopt,
       toDateOnce(std::string("2026-09-11"), std::string("yyyy-MM-dd G")));
   EXPECT_EQ(
-      0,
-      toDateOnce(std::string("05:30:00 PM"), std::string("hh:mm:ss a")));
+      0, toDateOnce(std::string("05:30:00 PM"), std::string("hh:mm:ss a")));
   VELOX_ASSERT_THROW(
       toDateOnce(std::string("2026-09-11Z"), std::string("yyyy-MM-ddX")),
       "not supported");
@@ -461,35 +430,29 @@ TEST_F(ToDateTest, TwoArgPatternLegality) {
       "closing single quote");
   VELOX_ASSERT_THROW(
       toDateConstFormatOnce(
-          std::string("2026-09-11"),
-          std::string("yyyy-MM-dd u")),
+          std::string("2026-09-11"), std::string("yyyy-MM-dd u")),
       "not supported");
   VELOX_ASSERT_THROW(
       toDateConstFormatOnce(
-          std::string("2026-09-11"),
-          std::string("yyyy-LLL-dd")),
+          std::string("2026-09-11"), std::string("yyyy-LLL-dd")),
       "not supported");
   VELOX_ASSERT_THROW(
       toDateConstFormatOnce(
-          std::string("2026-09-11"),
-          std::string("yyyy-MM-dd XXXX")),
+          std::string("2026-09-11"), std::string("yyyy-MM-dd XXXX")),
       "not supported");
   VELOX_ASSERT_THROW(
       toDateConstFormatOnce(
-          std::string("2026-09-11"),
-          std::string("yyyy-F-dd")),
+          std::string("2026-09-11"), std::string("yyyy-F-dd")),
       "not supported");
   // 'C' = century-of-era overwrites the year: 20 -> 2000.
   EXPECT_EQ(
       11211,
       toDateConstFormatOnce(
-          std::string("2026 20 09 11"),
-          std::string("yyyy CC MM dd")));
+          std::string("2026 20 09 11"), std::string("yyyy CC MM dd")));
   EXPECT_EQ(
       20707,
       toDateConstFormatOnce(
-          std::string("2026-09-11 3"),
-          std::string("yyyy-MM-dd e")));
+          std::string("2026-09-11 3"), std::string("yyyy-MM-dd e")));
   // 'x' = week-year: 2026-W03-1 = 2026-01-12.
   EXPECT_EQ(
       20465,
@@ -524,8 +487,7 @@ TEST_F(ToDateTest, TwoArgAllNullInputWithBadConstantFormat) {
   // All-NULL input: Flink's null propagation skips the method call, so the
   // constant-format error must not surface — the rows come back NULL.
   EXPECT_EQ(
-      std::nullopt,
-      toDateConstFormatOnce(std::nullopt, std::string("QQ")));
+      std::nullopt, toDateConstFormatOnce(std::nullopt, std::string("QQ")));
   EXPECT_EQ(
       std::nullopt,
       toDateConstFormatOnce(std::nullopt, std::string("yyyy-MM-dd")));

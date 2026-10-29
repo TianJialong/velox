@@ -58,8 +58,9 @@ template <typename TExec>
 struct ToDateFunction {
   VELOX_DEFINE_FUNCTION_TYPES(TExec);
 
-  FOLLY_ALWAYS_INLINE bool
-  call(out_type<Date>& result, const arg_type<Varchar>& s) {
+  FOLLY_ALWAYS_INLINE bool call(
+      out_type<Date>& result,
+      const arg_type<Varchar>& s) {
     auto days = flinkParseDate(std::string_view(s));
     if (!days.has_value()) {
       return false; // NULL
@@ -82,13 +83,12 @@ struct ToDateWithFormatFunction {
       const arg_type<Varchar>* /*input*/,
       const arg_type<Varchar>* format) {
     if (format != nullptr) {
-      formatter_ =
-          buildSimpleDateTimeFormatter(
-              std::string_view(format->data(), format->size()),
-              /*lenient=*/true)
-              .thenOrThrow(folly::identity, [](const Status& status) {
-                VELOX_USER_FAIL("{}", status.message());
-              });
+      formatter_ = buildSimpleDateTimeFormatter(
+                       std::string_view(format->data(), format->size()),
+                       /*lenient=*/true)
+                       .thenOrThrow(folly::identity, [](const Status& status) {
+                         VELOX_USER_FAIL("{}", status.message());
+                       });
       isConstFormat_ = true;
     }
   }
@@ -99,12 +99,11 @@ struct ToDateWithFormatFunction {
       const arg_type<Varchar>& format) {
     if (!isConstFormat_) {
       // Non-constant format: built per row; a bad row fails the job.
-      formatter_ =
-          buildSimpleDateTimeFormatter(
-              std::string_view(format), /*lenient=*/true)
-              .thenOrThrow(folly::identity, [](const Status& status) {
-                VELOX_USER_FAIL("{}", status.message());
-              });
+      formatter_ = buildSimpleDateTimeFormatter(
+                       std::string_view(format), /*lenient=*/true)
+                       .thenOrThrow(folly::identity, [](const Status& status) {
+                         VELOX_USER_FAIL("{}", status.message());
+                       });
     }
     auto dateTimeResult = formatter_->parse(std::string_view(s));
     // Parse failure -> NULL (Flink's JDK engine yields a garbage date).
@@ -159,8 +158,9 @@ template <typename TExec>
 struct ToTimestampFunction {
   VELOX_DEFINE_FUNCTION_TYPES(TExec);
 
-  FOLLY_ALWAYS_INLINE bool
-  call(out_type<Timestamp>& result, const arg_type<Varchar>& s) {
+  FOLLY_ALWAYS_INLINE bool call(
+      out_type<Timestamp>& result,
+      const arg_type<Varchar>& s) {
     auto parsed = flinkParseTimestamp(std::string_view(s));
     if (!parsed.has_value()) {
       return false; // NULL
@@ -206,8 +206,8 @@ struct ToTimestampWithFormatFunction {
       if (invalidFormat_) {
         return false; // constant bad format: every row NULL
       }
-      auto parsed = flinkParseTimestampWithFormatter(
-          *formatter_, std::string_view(s));
+      auto parsed =
+          flinkParseTimestampWithFormatter(*formatter_, std::string_view(s));
       if (!parsed.has_value()) {
         return false;
       }

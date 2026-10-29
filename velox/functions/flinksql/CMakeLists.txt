@@ -14,11 +14,8 @@
 
 velox_add_library(velox_functions_flink_impl DateTimeFunctions.cpp)
 
-velox_link_libraries(
-  velox_functions_flink_impl
-  velox_functions_lib
-  velox_functions_lib_date_time_formatter
-  Folly::folly)
+velox_link_libraries(velox_functions_flink_impl velox_functions_lib
+                     velox_functions_lib_date_time_formatter Folly::folly)
 
 add_subdirectory(registration)
 

@@ -43,8 +43,7 @@ TEST_F(ToTimestampLtzTest, PrecisionDomain) {
   EXPECT_EQ(Timestamp(1666605683, 0), ltzOnce<int64_t>(1666605683, 0));
   EXPECT_EQ(Timestamp(1709165040, 0), ltzOnce<int64_t>(1709165040, 0));
   EXPECT_EQ(
-      Timestamp(253402300799, 999000000),
-      ltzOnce<int64_t>(253402300799999, 3));
+      Timestamp(253402300799, 999000000), ltzOnce<int64_t>(253402300799999, 3));
   EXPECT_EQ(std::nullopt, ltzOnce<int64_t>(253402300800000, 3));
   EXPECT_EQ(Timestamp(-62167219200, 0), ltzOnce<int64_t>(-62167219200000, 3));
   EXPECT_EQ(std::nullopt, ltzOnce<int64_t>(-62167219200001, 3));
@@ -80,8 +79,7 @@ TEST_F(ToTimestampLtzTest, IllegalPrecisionFails) {
   auto data = makeRowVector(std::vector<VectorPtr>{
       makeNullableFlatVector<int64_t>({1, 1, 1, 1, 1, 1, 1, 1, 1, 1}),
       makeNullableFlatVector<int32_t>({1, 2, 4, 5, 6, 7, 8, 9, -1, 10})});
-  VELOX_ASSERT_THROW(
-      evaluate("to_timestamp_ltz(c0, c1)", data), "unsupported");
+  VELOX_ASSERT_THROW(evaluate("to_timestamp_ltz(c0, c1)", data), "unsupported");
   // Constant INT precision column: the compile-once constant path throws too.
   auto constData = makeRowVector(std::vector<VectorPtr>{
       makeNullableFlatVector<int64_t>({1}),

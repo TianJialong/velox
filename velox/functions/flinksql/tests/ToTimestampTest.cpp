@@ -62,8 +62,7 @@ TEST_F(ToTimestampTest, OneArgBasics) {
   EXPECT_EQ(
       Timestamp(1788239167, 0), toTimestampOnce(std::string("2026-9-1 5:6:7")));
   EXPECT_EQ(
-      Timestamp(1789084800, 0),
-      toTimestampOnce(std::string("2026-09-11")));
+      Timestamp(1789084800, 0), toTimestampOnce(std::string("2026-09-11")));
   EXPECT_EQ(
       Timestamp(1789120800, 123000000),
       toTimestampOnce(std::string("2026-09-11 10:00:00.123456789")));
@@ -137,22 +136,15 @@ TEST_F(ToTimestampTest, OneArgInvalidToNull) {
   EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 24:30:00")));
   EXPECT_EQ(
       std::nullopt, toTimestampOnce(std::string("2026-09-11 24:00:00.5")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("10000-01-01 00:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("09999-01-01 00:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("+1000-01-01 00:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("-0001-01-01 00:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("0000-01-01 00:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("10000-01-01 00:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("09999-01-01 00:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("+1000-01-01 00:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("-0001-01-01 00:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("0000-01-01 00:00:00")));
   EXPECT_EQ(
       std::nullopt, toTimestampOnce(std::string(" 2026-09-11 10:00:00 ")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 10:00:00 ")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11\t10:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 10:00:00 ")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11\t10:00:00")));
   EXPECT_EQ(
       std::nullopt, toTimestampOnce(std::string("2026-09-11 10:00:00xyz")));
   EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11.5")));
@@ -181,16 +173,11 @@ TEST_F(ToTimestampTest, OneArgLadderAndDefaults) {
   EXPECT_EQ(
       Timestamp(1789120800, 0),
       toTimestampOnce(std::string("2026-09-11 10:00:000")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 10:00:001")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 10:001:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 010:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 100:00:00")));
-  EXPECT_EQ(
-      std::nullopt, toTimestampOnce(std::string("2026-09-11 001:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 10:00:001")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 10:001:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 010:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 100:00:00")));
+  EXPECT_EQ(std::nullopt, toTimestampOnce(std::string("2026-09-11 001:00:00")));
   EXPECT_EQ(Timestamp(1767225600, 0), toTimestampOnce(std::string("2026--")));
   EXPECT_EQ(
       Timestamp(1788256800, 0),
@@ -222,8 +209,7 @@ TEST_F(ToTimestampTest, OneArgHugeYears) {
   EXPECT_EQ(
       std::nullopt, toTimestampOnce(std::string("+999999999-01-01 00:00:00")));
   EXPECT_EQ(
-      std::nullopt,
-      toTimestampOnce(std::string("+1000000000-01-01 00:00:00")));
+      std::nullopt, toTimestampOnce(std::string("+1000000000-01-01 00:00:00")));
   EXPECT_EQ(
       std::nullopt,
       toTimestampOnce(std::string("+12345678901234567890-01-01 00:00:00")));
