@@ -25,9 +25,9 @@ namespace facebook::velox::functions::flinksql {
 
 // Flink hash expressions take a string (hashed as its UTF-8 bytes) and
 // return a lowercase hex VARCHAR — Flink anchors on commons-codec
-// DigestUtils.*Hex. The prestosql/sparksql md5/sha1/sha256/sha512 take and
-// return varbinary raw digests, so the flinksql varchar signatures coexist
-// with them. Digest primitive here: folly::ssl::OpenSSLHash.
+// DigestUtils.*Hex. The flinksql VARCHAR-input signatures coexist with the
+// baselines' varbinary-input hash functions by input-type dispatch.
+// Digest primitive here: folly::ssl::OpenSSLHash.
 //
 // Implemented: the SHA-2 family — sha2(s, hashLength) plus the fixed-length
 // spellings sha224/sha256/sha384/sha512 that bind the hash length and route
